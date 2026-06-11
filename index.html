@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
+<meta name="HandheldFriendly" content="true">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>月薪喵 - 我真的特别爱你</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+  
+  body {
+    min-height: 100vh;
+    min-height: 100dvh;
+    background: linear-gradient(135deg, #ffd1dc 0%, #ffe4e1 50%, #ffecec 100%);
+    font-family: "Microsoft YaHei", "PingFang SC", "Hiragino Sans GB", "Heiti SC", sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 15px;
+    overflow-x: hidden;
+    position: relative;
+    touch-action: manipulation;
+  }
+
+  /* ========== 进入引导层（关键点：用户必须点一下才能播放音乐） ========== */
+  .welcome-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(135deg, #ffb6c1 0%, #ff69b4 50%, #ff1493 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    z-index: 9999;
+    cursor: pointer;
+    -webkit-cursor: pointer;
+    transition: opacity 0.5s ease;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  
+  .welcome-overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+  
+  .welcome-title {
+    color: white;
+    font-size: 32px;
+    font-weight: bold;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.2);
+    margin-bottom: 20px;
+    letter-spacing: 3px;
+    animation: welcomePulse 2s ease-in-out infinite;
+    text-align: center;
+    padding: 0 20px;
+  }
+  
+  .welcome-hint {
+    color: white;
+    font-size: 18px;
+    margin-top: 15px;
+    letter-spacing: 2px;
+    text-shadow: 1px 1px 4px rgba(0,0,0,0.2);
+    animation: welcomeBlink 1.2s ease-in-out infinite;
+    text-align: center;
+    padding: 0 20px;
+  }
+  
+  .welcome-emoji {
+    font-size: 80px;
+    margin-bottom: 20px;
+    animation: bounce2 1s ease-in-out infinite;
+  }
+  
+  .welcome-arrow {
+    color: white;
+    font-size: 40px;
+    margin-top: 30px;
+    animation: arrowDown 1s ease-in-out infinite;
+  }
+  
+  @keyframes welcomePulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+  
+  @keyframes welcomeBlink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+  
+  @keyframes bounce2 {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+  }
+  
+  @keyframes arrowDown {
+    0%, 100% { transform: translateY(0); opacity: 1; }
+    50% { transform: translateY(15px); opacity: 0.5; }
+  }
+
+  /* ========== 主内容 ========== */
+  .container {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 30px;
+    padding: 35px 25px;
+    box-shadow: 0 20px 60px rgba(255, 105, 180, 0.3),
+                0 0 0 3px rgba(255, 182, 193, 0.5);
+    text-align: center;
+    max-width: 500px;
+    width: 100%;
+    animation: fadeIn 0.8s ease-out;
+    position: relative;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  
+  .title {
+    font-size: 28px;
+    font-weight: bold;
+    color: #ff1493;
+    margin-bottom: 25px;
+    text-shadow: 2px 2px 4px rgba(255, 105, 180, 0.2);
+    letter-spacing: 2px;
+  }
+  
+  .cat-box {
+    background: linear-gradient(135deg, #fff0f5 0%, #ffe4ec 100%);
+    border-radius: 20px;
+    padding: 25px 15px;
+    margin-bottom: 25px;
+    border: 3px dashed #ffb6c1;
+    box-shadow: inset 0 2px 10px rgba(255, 182, 193, 0.2);
+  }
+  
+  .cat-img {
+    max-width: 100%;
+    width: 260px;
+    max-height: 260px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+    image-rendering: auto;
+    -webkit-interpolation-mode: bicubic;
+    animation: bounce 2s ease-in-out infinite;
+  }
+  
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+  
+  .love-text {
+    font-size: 24px;
+    font-weight: bold;
+    color: #ff69b4;
+    margin-top: 15px;
+    text-shadow: 2px 2px 4px rgba(255, 105, 180, 0.3);
+    letter-spacing: 3px;
+    animation: pulse 1.5s ease-in-out infinite;
+    line-height: 1.4;
+  }
+  
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.05); opacity: 0.9; }
+  }
+
+  /* ========== 音乐控制 ========== */
+  .music-status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #ff69b4 0%, #ff1493 100%);
+    color: white;
+    padding: 10px 25px;
+    border-radius: 25px;
+    font-size: 14px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 15px rgba(255, 20, 147, 0.4);
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    transition: transform 0.2s;
+    margin-bottom: 12px;
+  }
+  
+  .music-status:active { transform: scale(0.95); }
+  
+  .music-status .icon {
+    font-size: 18px;
+    animation: spin 2s linear infinite;
+    display: inline-block;
+  }
+  
+  .music-status.paused .icon {
+    animation: none;
+  }
+  
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  
+  .tip {
+    font-size: 12px;
+    color: #999;
+    margin-top: 5px;
+    line-height: 1.6;
+  }
+
+  /* ========== 飘心 ========== */
+  .hearts {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 100;
+  }
+  
+  .heart {
+    position: absolute;
+    font-size: 24px;
+    animation: floatUp 3s ease-out forwards;
+    opacity: 0;
+  }
+  
+  @keyframes floatUp {
+    0% { opacity: 0; transform: translateY(0) scale(0.5); }
+    15% { opacity: 1; transform: translateY(-20px) scale(1); }
+    100% { opacity: 0; transform: translateY(-300px) scale(0.8) rotate(25deg); }
+  }
+
+  /* ========== 手机端优化 ========== */
+  @media (max-width: 480px) {
+    body { padding: 15px 10px; }
+    .container { padding: 25px 18px; border-radius: 25px; }
+    .title { font-size: 22px; margin-bottom: 18px; }
+    .cat-box { padding: 20px 10px; margin-bottom: 20px; }
+    .cat-img { width: 220px; max-height: 220px; }
+    .love-text { font-size: 18px; letter-spacing: 2px; }
+    .welcome-title { font-size: 24px; }
+    .welcome-hint { font-size: 14px; }
+    .welcome-emoji { font-size: 60px; }
+    .music-status { padding: 8px 20px; font-size: 12px; }
+    .tip { font-size: 11px; }
+  }
+  
+  @media (max-width: 360px) {
+    .title { font-size: 20px; }
+    .cat-img { width: 180px; max-height: 180px; }
+    .love-text { font-size: 16px; }
+    .welcome-title { font-size: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ========== 进入引导层（用户必点） ========== -->
+<div class="welcome-overlay" id="welcomeOverlay">
+  <div class="welcome-emoji">🐾</div>
+  <div class="welcome-title">月 薪 喵</div>
+  <div class="welcome-hint">💖 点 击 屏 幕 任 意 位 置 进 入 💖</div>
+  <div class="welcome-arrow">⬇</div>
+</div>
+
+<!-- ========== 飘心容器 ========== -->
+<div class="hearts" id="heartsContainer"></div>
+
+<!-- ========== 主内容 ========== -->
+<div class="container">
+  <div class="title">🐾 月薪喵 🐾</div>
+  
+  <div class="cat-box">
+    <img class="cat-img" id="catImg" src="cat.GIF" alt="月薪喵"
+         onerror="this.onerror=null;this.src='cat.gif';"
+         style="background:#fff;border-radius:15px;">
+    <div class="love-text">我真的特别爱你 💕</div>
+  </div>
+  
+  <div class="music-status" id="musicStatus" onclick="toggleMusic()">
+    <span class="icon" id="musicIcon">🎵</span>
+    <span id="musicLabel">音乐播放中</span>
+  </div>
+  <div class="tip">点击上方按钮可暂停/播放 · 点击页面任意处飘心 ♥</div>
+</div>
+
+<!-- ========== 背景音乐（preload 提前加载） ========== -->
+<audio id="bgMusic" loop preload="auto" playsinline webkit-playsinline x5-playsinline x5-video-player-type="h5-page" x5-video-player-fullscreen="false">
+  <source src="music.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+(function() {
+  const audio = document.getElementById('bgMusic');
+  const welcomeOverlay = document.getElementById('welcomeOverlay');
+  const musicStatus = document.getElementById('musicStatus');
+  const musicLabel = document.getElementById('musicLabel');
+  const musicIcon = document.getElementById('musicIcon');
+  const heartsContainer = document.getElementById('heartsContainer');
+  
+  let isPlaying = false;
+  let hasInteracted = false;
+
+  // ========== 播放音乐（核心函数：兼容所有浏览器） ==========
+  function playMusic() {
+    try {
+      // 先 reset，避免某些浏览器卡住
+      if (audio.currentTime > 0) {
+        audio.currentTime = 0;
+      }
+      
+      const p = audio.play();
+      
+      // 现代浏览器返回 Promise
+      if (p !== undefined) {
+        p.then(() => {
+          isPlaying = true;
+          updateMusicUI(true);
+        }).catch(err => {
+          // 自动播放被拦截，等用户点击
+          isPlaying = false;
+          updateMusicUI(false);
+        });
+      } else {
+        // 旧浏览器直接播放
+        isPlaying = true;
+        updateMusicUI(true);
+      }
+    } catch (e) {
+      isPlaying = false;
+      updateMusicUI(false);
+    }
+  }
+  
+  function pauseMusic() {
+    try {
+      audio.pause();
+      isPlaying = false;
+      updateMusicUI(false);
+    } catch (e) {}
+  }
+  
+  function toggleMusic() {
+    if (isPlaying) {
+      pauseMusic();
+    } else {
+      playMusic();
+    }
+  }
+  
+  function updateMusicUI(playing) {
+    if (playing) {
+      musicStatus.classList.remove('paused');
+      musicIcon.textContent = '🎵';
+      musicLabel.textContent = '音乐播放中';
+    } else {
+      musicStatus.classList.add('paused');
+      musicIcon.textContent = '▶';
+      musicLabel.textContent = '点击播放音乐';
+    }
+  }
+  
+  // ========== 进入引导层点击事件 ==========
+  function enterSite(e) {
+    if (hasInteracted) return;
+    hasInteracted = true;
+    
+    // 隐藏引导层
+    welcomeOverlay.classList.add('hidden');
+    setTimeout(() => {
+      if (welcomeOverlay.parentNode) {
+        welcomeOverlay.style.display = 'none';
+      }
+    }, 500);
+    
+    // 立即播放音乐
+    playMusic();
+    
+    // 点击进入时飘一大波心
+    for (let i = 0; i < 8; i++) {
+      setTimeout(() => {
+        const x = Math.random() * window.innerWidth;
+        const y = window.innerHeight / 2 + Math.random() * 100;
+        createHeart(x, y);
+      }, i * 100);
+    }
+    
+    // 阻止默认行为（避免移动端缩放等）
+    if (e && e.preventDefault) e.preventDefault();
+  }
+  
+  // 多种事件绑定，确保在微信/QQ/浏览器都能触发
+  welcomeOverlay.addEventListener('click', enterSite);
+  welcomeOverlay.addEventListener('touchstart', function(e) {
+    e.preventDefault();
+    enterSite(e);
+  }, { passive: false });
+  welcomeOverlay.addEventListener('touchend', enterSite);
+  
+  // ========== 飘心功能 ==========
+  function createHeart(x, y) {
+    try {
+      const hearts = ['❤️', '💕', '💖', '💗', '💝', '💘', '🌸', '✨'];
+      const heart = document.createElement('div');
+      heart.className = 'heart';
+      heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+      heart.style.left = (x - 12) + 'px';
+      heart.style.top = (y - 12) + 'px';
+      heartsContainer.appendChild(heart);
+      setTimeout(() => {
+        if (heart.parentNode) heart.parentNode.removeChild(heart);
+      }, 3100);
+    } catch (e) {}
+  }
+  
+  // 点击主页面飘心
+  document.addEventListener('click', function(e) {
+    if (!hasInteracted) return;
+    if (e.target.closest('#musicStatus')) return;
+    createHeart(e.clientX, e.clientY);
+  });
+  
+  // 触摸飘心
+  document.addEventListener('touchstart', function(e) {
+    if (!hasInteracted) return;
+    if (e.target.closest('#musicStatus')) return;
+    const touch = e.touches[0];
+    if (touch) createHeart(touch.clientX, touch.clientY);
+  });
+  
+  // 自动飘心
+  setInterval(() => {
+    if (!hasInteracted) return;
+    const x = Math.random() * window.innerWidth;
+    const y = window.innerHeight - 50 - Math.random() * 100;
+    createHeart(x, y);
+  }, 800);
+  
+  // ========== 音乐按钮切换 ==========
+  window.toggleMusic = toggleMusic;
+  
+  // ========== 页面可见性变化时恢复播放（微信/QQ 切换回来） ==========
+  document.addEventListener('visibilitychange', function() {
+    if (!document.hidden && hasInteracted && !isPlaying) {
+      // 页面重新可见，尝试恢复音乐
+      setTimeout(playMusic, 100);
+    }
+  });
+  
+  // ========== 音频加载错误处理 ==========
+  audio.addEventListener('error', function() {
+    musicIcon.textContent = '⚠';
+    musicLabel.textContent = '音乐文件未找到';
+    musicStatus.style.background = 'linear-gradient(135deg, #888 0%, #555 100%)';
+  });
+  
+  // ========== 音频加载成功提示 ==========
+  audio.addEventListener('canplaythrough', function() {
+    // 如果用户还没交互，提前预加载好，等用户点击时立即播放
+  });
+  
+  // ========== 初始化 UI 状态 ==========
+  updateMusicUI(false);
+  
+})();
+</script>
+
+</body>
+</html>
